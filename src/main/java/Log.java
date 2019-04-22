@@ -1,8 +1,13 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * A method that makes console loggind a lot prettier and easier.
+ *
+ * MIT License
+ * Copyright (c) 2019 Malte Schink (malteschink.de)
+ */
 public class Log {
-  
   private static void write(String text) {
     System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + " > " + text);
   }
