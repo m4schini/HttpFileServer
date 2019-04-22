@@ -46,29 +46,29 @@ public class Main {
   private static class getUpdater implements HTTPServer.ContextHandler {
     @Override
     public int serve(HTTPServer.Request request, HTTPServer.Response response) throws IOException {
-      Log.warning("Neue update Anfrage");
+      Log.warning("new update request");
       Map<String, String> params = request.getParams();
       
       if (License.verify(params.get("key"))) {
-        Log.status("Benutzter Lizensschlüssel: " + params.get("key"));
+        Log.status("used licensekey: " + params.get("key"));
   
         File file = new File("updateFiles/" + params.get("file"));
         if (file.exists()) {
           try {
             response.getHeaders().add("Content-Disposition", "filename=" + params.get("file"));
             sendFile(200, "application/zip", file, response);
-            Log.success("Datei wurde erfolgreich geliefert");
+            Log.success("File " + params.get("file") + " served");
           } catch (IOException e) {
             Log.error("Something went wrong with the file");
             //e.printStackTrace();
           }
         } else {
-          Log.error("Datei existiert nicht");
-          response.send(404, "Datei wurde nicht gefunden");
+          Log.error("File does not exist");
+          response.send(404, "File wasn't found");
         }
       } else {
-        Log.error("Update Anfrage hat ungültigen Schlüssel benutzt");
-        response.send(401, "Du bist nicht berechtigt diese Datei zu öffnen");
+        Log.error("request used invalid key");
+        response.send(401, "You're not allowed to access this file");
       }
       return 0;
     }
