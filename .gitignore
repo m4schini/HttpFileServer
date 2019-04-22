@@ -90,3 +90,17 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+/src/main/java/net/freeutils/httpserver/
+/keys.txt
+/README.txt
+.idea/codeStyles/
+.idea/compiler.xml
+.idea/google-java-format.xml
+.idea/misc.xml
+.idea/vcs.xml
+README.txt
+keys.txt
+src/main/java/net/
+src/main/resources/
+src/test/
+updateDownloadServer.iml
