@@ -1,34 +1,39 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
+
 /**
- * A method that makes console loggind a lot prettier and easier.
+ * A method that makes console logging a lot prettier and easier.
  *
  * MIT License
  * Copyright (c) 2019 Malte Schink (malteschink.de)
  */
 public class Log {
-  private static void write(String text) {
-    System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + " > " + text);
+  static boolean enable_log = true;
+  private static void write(Object text) {
+    if (enable_log) {
+      System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + " > " + text);
+    }
   }
   
-  static void status(String text) {
+  static void status(Object text) {
     write(text);
   }
   
-  static void success(String text) {
+  static void success(Object text) {
     write(ANSI_GREEN + text + ANSI_RESET);
   }
   
-  static void error(String text) {
+  static void error(Object text) {
     write(ANSI_RED + "Error: " + text + ANSI_RESET);
   }
   
-  static void warning(String text) {
+  static void warning(Object text) {
     write(ANSI_YELLOW + "Warning: " + text + ANSI_RESET);
   }
   
-  static void critical(String text) {
+  static void critical(Object text) {
     write(ANSI_RED_BACKGROUND + ANSI_BLACK + "CRITICAL: " + text + ANSI_RESET);
   }
   

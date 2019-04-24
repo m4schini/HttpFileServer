@@ -1,43 +1,61 @@
-import java.sql.*;
+
+import java.io.Closeable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * @author Collin Alpert
  * @see <a href="https://github.com/CollinAlpert/APIs/blob/master/de/collin/DBConnection.java">GitHub</a>
  *
- * Edited and stripped down by Malte Schink
- * @see <a href="https://github.com/m4schini/APIs/tree/master/com/github/collinalpert/apis/database">GitHub</a>
+ * modified by Malte Schink
  */
-public class DBConnection_mariadb implements AutoCloseable {
+public class DBConnection implements Closeable {
+
+	static String HOSTNAME;		//Specifies the hostname/ip address of the database.
+	static String DATABASE;		//Specifies the name of the database to connect to.
+	static String USERNAME;		//Specifies the username to log in on the database with.
+	static String PASSWORD;		//Specifies the password to log in on the database with.
+
+	/**
+	 * Specifies the port to connect to the database on.
+	 * This property is optional. If not specified, it will be set to 3306, the default port of MySQL.
+	 */
+	public static int PORT = 3306;
+
+
+	static {
+		DriverManager.setLoginTimeout(5);
+	}
+
 	private Connection connection;
 	private boolean isConnectionValid;
-	
-	final static String HOSTNAME = Keys.DB.HOSTNAME;
-	final static String DATABASE = Keys.DB.DATABASE;
-	final static String USERNAME = Keys.DB.USERNAME;
-	final static String PASSWORD = Keys.DB.PASSWORD;
-	
-	public DBConnection_mariadb() {
+
+	public DBConnection() {
 		try {
+			//var connectionString = String.format("jdbc:mysql://%s:%d/%s?serverTimezone=UTC", HOST, PORT, DATABASE);
+			//Class.forName("com.mysql.cj.jdbc.Driver");
+			//System.setProperty("user", USERNAME);
+			//System.setProperty("password", PASSWORD);
+			//connection = DriverManager.getConnection(connectionString, System.getProperties());
+			
 			DriverManager.setLoginTimeout(5);
 			connection = DriverManager.getConnection(
-							"jdbc:mariadb://" + HOSTNAME + ":3306/" + DATABASE + "?autoReconnect=true",
+							"jdbc:mariadb://" + HOSTNAME + ":" + PORT + "/" + DATABASE + "?autoReconnect=true",
 							USERNAME,
 							PASSWORD);
-			isConnectionValid = true;
 			
-		} catch (SQLException e) {
+			isConnectionValid = true;
+		} catch ( SQLException e) {
 			e.printStackTrace();
 			isConnectionValid = false;
 		} catch (Exception e) {
-			System.err.println(
-							"The connection to the database failed. Please check if the MySQL " +
-											"server is reachable and if you have an internet connection.");
-			
 			isConnectionValid = false;
-			System.exit(1);
 		}
 	}
-	
+
 	/**
 	 * Checks if the connection is valid/successful.
 	 *
@@ -46,28 +64,29 @@ public class DBConnection_mariadb implements AutoCloseable {
 	public boolean isValid() {
 		return this.isConnectionValid;
 	}
-	
-	
+
+
 	/**
 	 * Executes a DQL statement on the database without Java parameters.
 	 *
 	 * @param query The query to be executed.
-	 * @return The {@link ResultSet} containing the result from the SELECT query.
+	 * @return The {@link ResultSet} containing the result from the DQL statement.
 	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
 	public ResultSet execute(String query) throws SQLException {
 		Statement statement = connection.createStatement();
+		Log.status(query);
 		var set = statement.executeQuery(query);
 		statement.closeOnCompletion();
 		return set;
 	}
-	
+
 	/**
 	 * Executes a DQL statement on the database with Java parameters.
 	 *
 	 * @param query  The query to be executed.
 	 * @param params The Java parameters to be inserted into the query.
-	 * @return The {@link ResultSet} containing the result from the SELECT query.
+	 * @return The {@link ResultSet} containing the result from the DQL statement.
 	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
 	public ResultSet execute(String query, Object... params) throws SQLException {
@@ -75,39 +94,56 @@ public class DBConnection_mariadb implements AutoCloseable {
 		for (int i = 0; i < params.length; i++) {
 			statement.setObject(i + 1, params[i]);
 		}
+
+		Log.status(query);
 		var set = statement.executeQuery();
 		statement.closeOnCompletion();
 		return set;
 	}
-	
+
 	/**
 	 * This command is used for any DDL/DML queries.
 	 *
 	 * @param query The query to be executed.
+	 * @return the last generated ID. This return value should only be used with INSERT statements.
 	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
-	public void update(String query) throws SQLException {
+	public long update(String query) throws SQLException {
 		var statement = connection.createStatement();
-		statement.executeUpdate(query);
-		statement.closeOnCompletion();
+		Log.status(query);
+		statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+		return updateHelper(statement);
 	}
-	
+
 	/**
 	 * This command is used for any DDL/DML queries with Java parameters.
 	 *
 	 * @param query  The query to be executed.
 	 * @param params The Java parameters to be inserted into the query.
+	 * @return the last generated ID. This return value should only be used with INSERT statements.
 	 * @throws SQLException if the query is malformed or cannot be executed.
 	 */
-	public void update(String query, Object... params) throws SQLException {
-		var statement = connection.prepareStatement(query);
+	public long update(String query, Object... params) throws SQLException {
+		var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		for (int i = 0; i < params.length; i++) {
 			statement.setObject(i + 1, params[i]);
 		}
+
+		Log.status(query);
 		statement.executeUpdate();
-		statement.closeOnCompletion();
+		return updateHelper(statement);
 	}
-	
+
+	private long updateHelper(Statement statement) throws SQLException {
+		statement.closeOnCompletion();
+		var set = statement.getGeneratedKeys();
+		if (set.next()) {
+			return set.getLong(1);
+		}
+
+		return -1;
+	}
+
 	/**
 	 * Determines if a connection to the database still exists or not.
 	 *
@@ -119,20 +155,22 @@ public class DBConnection_mariadb implements AutoCloseable {
 			return !connection.isClosed();
 		} catch (SQLException e) {
 			System.err.println("Could not determine connection status");
-			isConnectionValid = false;
-			return false;
+			return isConnectionValid = false;
 		}
 	}
-	
+
 	/**
 	 * Closes the connection to the database.
 	 */
 	@Override
 	public void close() {
 		try {
-			connection.close();
+			if (connection != null) {
+				connection.close();
+			}
 		} catch (SQLException e) {
 			System.err.println("Could not close database connection");
+			e.printStackTrace();
 		} finally {
 			isConnectionValid = false;
 		}

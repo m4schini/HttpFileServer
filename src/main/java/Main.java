@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
   
   static List keys = new ArrayList();
-  DBConnection_mariadb dbconnection = new DBConnection_mariadb();
+  static License license = new License();
   
   public static void main(String[] args) {
     if (License.loadKeys()) {
@@ -42,6 +42,7 @@ public class Main {
       String consoleInput = scanner.nextLine();
       if (consoleInput.equals("exit")) {
         Log.status("Until next time");
+        license.close();
         System.exit(0);
       }
     }
@@ -50,10 +51,12 @@ public class Main {
   private static class getUpdater implements HTTPServer.ContextHandler {
     @Override
     public int serve(HTTPServer.Request request, HTTPServer.Response response) throws IOException {
+      Log.status("------------------------------");
       Log.warning("new update request");
       Map<String, String> params = request.getParams();
       
-      if (License.verify(params.get("key"))) {
+      //Obsolete version: License.verify_fromTXT
+      if (license.verify(params.get("key"))) {
         Log.status("used licensekey: " + params.get("key"));
   
         File file = new File("updateFiles/" + params.get("file"));
