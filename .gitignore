@@ -104,3 +104,4 @@ src/main/java/net/
 src/main/resources/
 src/test/
 updateDownloadServer.iml
+/src/main/java/Keys.java
