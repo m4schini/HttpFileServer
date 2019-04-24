@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
+  
   static List keys = new ArrayList();
+  DBConnection_mariadb dbconnection = new DBConnection_mariadb();
+  
   public static void main(String[] args) {
     if (License.loadKeys()) {
       Log.status("[1/3] Loaded license Keys " + keys.toString());
@@ -25,10 +28,11 @@ public class Main {
     
     try {
       server.start();
+      
     } catch (IOException e) {
       Log.error("Server start failed");
       System.exit(-1);
-      e.printStackTrace();
+      //e.printStackTrace();
     }
     
     Scanner scanner = new Scanner(System.in);
@@ -75,7 +79,7 @@ public class Main {
     
     /**
      * Modified net.freeutils.httpserver.HTTPServer.Response#send(int, java.lang.String)
-     * so i can serve Files instead of an HTML Page
+     * makes it possible to serve Files instead of an HTML Page
      *
      * @param status http status code
      * @param contentType MIME Content type
