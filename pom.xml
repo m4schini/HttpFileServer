@@ -6,7 +6,7 @@
 
     <groupId>malteschink</groupId>
     <artifactId>updateServer</artifactId>
-    <version>1.1.0</version>
+    <version>2.1.0</version>
 
     <dependencies>
         <dependency>
@@ -24,6 +24,11 @@
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.m4schini</groupId>
+            <artifactId>FancyLog</artifactId>
+            <version>2.1.0</version>
         </dependency>
     </dependencies>
 
