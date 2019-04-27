@@ -14,10 +14,10 @@ import java.sql.Statement;
  */
 public class DBConnection implements Closeable {
 
-	static String HOSTNAME;		//Specifies the hostname/ip address of the database.
-	static String DATABASE;		//Specifies the name of the database to connect to.
-	static String USERNAME;		//Specifies the username to log in on the database with.
-	static String PASSWORD;		//Specifies the password to log in on the database with.
+	private static String HOSTNAME = Keys.DB.HOSTNAME;		//Specifies the hostname/ip address of the database.
+	private static String DATABASE = Keys.DB.DATABASE;		//Specifies the name of the database to connect to.
+	private static String USERNAME = Keys.DB.USERNAME;		//Specifies the username to log in on the database with.
+	private static String PASSWORD = Keys.DB.PASSWORD;		//Specifies the password to log in on the database with.
 
 	/**
 	 * Specifies the port to connect to the database on.
@@ -75,7 +75,7 @@ public class DBConnection implements Closeable {
 	 */
 	public ResultSet execute(String query) throws SQLException {
 		Statement statement = connection.createStatement();
-		Log.status(query);
+		//LocalLog.status(query);
 		var set = statement.executeQuery(query);
 		statement.closeOnCompletion();
 		return set;
@@ -95,7 +95,7 @@ public class DBConnection implements Closeable {
 			statement.setObject(i + 1, params[i]);
 		}
 
-		Log.status(query);
+		//LocalLog.status(query);
 		var set = statement.executeQuery();
 		statement.closeOnCompletion();
 		return set;
@@ -110,7 +110,7 @@ public class DBConnection implements Closeable {
 	 */
 	public long update(String query) throws SQLException {
 		var statement = connection.createStatement();
-		Log.status(query);
+		//LocalLog.status(query);
 		statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 		return updateHelper(statement);
 	}
@@ -129,7 +129,7 @@ public class DBConnection implements Closeable {
 			statement.setObject(i + 1, params[i]);
 		}
 
-		Log.status(query);
+		//LocalLog.status(query);
 		statement.executeUpdate();
 		return updateHelper(statement);
 	}

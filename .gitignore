@@ -3,7 +3,7 @@
 # Compiled class file
 *.class
 
-# LocalLog file
+# Log file
 *.log
 
 # BlueJ files
@@ -90,7 +90,6 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
-/src/main/java/net/freeutils/httpserver/
 /keys.txt
 /README.txt
 .idea/codeStyles/
@@ -98,10 +97,9 @@ fabric.properties
 .idea/google-java-format.xml
 .idea/misc.xml
 .idea/vcs.xml
-README.txt
-keys.txt
 src/main/java/net/
 src/main/resources/
 src/test/
 updateDownloadServer.iml
 /src/main/java/Keys.java
+src/main/java/Test.java

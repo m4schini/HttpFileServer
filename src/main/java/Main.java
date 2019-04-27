@@ -1,3 +1,4 @@
+import com.github.m4schini.FancyLog.Log;
 import net.freeutils.httpserver.HTTPServer;
 import org.apache.commons.io.IOUtils;
 
@@ -10,17 +11,18 @@ import java.util.Scanner;
 public class Main {
   
   static List keys = new ArrayList();
-  static License license = new License();
+  private static License license = new License();
   
   public static void main(String[] args) {
     if (License.loadKeys()) {
-      Log.status("[1/3] Loaded license Keys " + keys.toString());
+      Log.loading(3);
     } else {
+      Log.loading(-1);
       Log.critical("Unable to load license Keys");
       System.exit(-1);
     }
-    
-    Log.status("[2/3] Starting server");
+  
+    Log.loading(6);
     HTTPServer server = new HTTPServer(1337);
     HTTPServer.VirtualHost host = server.getVirtualHost(null);
     
@@ -30,17 +32,19 @@ public class Main {
       server.start();
       
     } catch (IOException e) {
+      Log.loading(-1);
       Log.error("Server start failed");
       System.exit(-1);
       //e.printStackTrace();
     }
     
     Scanner scanner = new Scanner(System.in);
-  
-    Log.success("[3/3] Server start successfull");
+    Log.loading(10);
+    Log.success("Server started");
     while (true) {
       String consoleInput = scanner.nextLine();
       if (consoleInput.equals("exit")) {
+        Log.divide();
         Log.status("Until next time");
         license.close();
         System.exit(0);
@@ -51,7 +55,7 @@ public class Main {
   private static class getUpdater implements HTTPServer.ContextHandler {
     @Override
     public int serve(HTTPServer.Request request, HTTPServer.Response response) throws IOException {
-      Log.status("------------------------------");
+      Log.divide();
       Log.warning("new update request");
       Map<String, String> params = request.getParams();
       

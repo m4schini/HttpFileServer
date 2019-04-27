@@ -1,3 +1,5 @@
+import com.github.m4schini.FancyLog.Log;
+
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -24,7 +26,7 @@ public class License {
     try {
       ResultSet resultSet = dbconnection.execute("SELECT * FROM licenseKeys WHERE licenseKey=?", key);
       resultSet.next();
-  
+      
       if (new Date().before(resultSet.getDate("validUntil"))) {
         Log.success("Licensekey is valid");
         return true;
@@ -84,3 +86,5 @@ public class License {
     return key.contains(key);
   }
 }
+
+
