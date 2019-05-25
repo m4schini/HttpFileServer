@@ -18,7 +18,7 @@ class Cli {
         try {
           arg1 = command[1];
         } catch (ArrayIndexOutOfBoundsException e) {
-          ls(Main.UPDATES_PATH);
+          ls(Config.PATH_UPDATES);
           break;
         }
         switch (arg1) {
@@ -26,7 +26,7 @@ class Cli {
           
           break;
           default:
-            ls(Main.UPDATES_PATH + arg1);
+            ls(Config.PATH_UPDATES + arg1);
           break;
         }
         break;
