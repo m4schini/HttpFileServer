@@ -14,7 +14,6 @@ import java.util.Scanner;
 public class Main {
   
   private static License license = new License();
-  public static final String UPDATES_PATH = "updateFiles/";
   
   public static void main(String[] args) throws IOException {
     if (License.loadKeys()) {
@@ -26,7 +25,7 @@ public class Main {
     HTTPServer server = new HTTPServer(4200);
     HTTPServer.VirtualHost host = server.getVirtualHost(null);
     host.addContext("/update", new getUpdater());
-    host.addContext("/v2/update", new serveUpdate());
+    host.addContext("/v2/update", new UpdateServer());
     server.start();
   
     Scanner scanner = new Scanner(System.in);
@@ -49,7 +48,7 @@ public class Main {
       if (license.verify(params.get("key"))) {
         Log.status("used licensekey: " + params.get("key"));
   
-        File file = new File(UPDATES_PATH + params.get("file"));
+        File file = new File(Config.PATH_UPDATES + params.get("file"));
         if (file.exists()) {
           try {
             response.getHeaders().add("Content-Disposition", "filename=" + params.get("file"));
