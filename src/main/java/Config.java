@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 class Config {
-  static final String PATH_CONFIG = "appProperties";
+  static final String PATH_CONFIG = "server.conf";
   static final String PATH_UPDATES = "updateFiles/";
   
   static Properties load(String path) throws IOException {

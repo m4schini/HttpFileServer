@@ -25,21 +25,19 @@ public class License {
       resultSet.next();
       
       if (new Date().before(resultSet.getDate("validUntil"))) {
-        Log.success("Licensekey is valid");
         return true;
       }
     } catch (SQLException e) {
       //e.printStackTrace();
-      Log.error("Licensekey does not exist or some other SQL related error");
+      Log.exception(e);
       return false;
     }
-    Log.warning("Licensekey is not valid anymore");
     return false;
   }
   
   boolean activity(String key) {
     try {
-      dbconnection.update("insert into activity values(?,?)",
+      dbconnection.update("INSERT INTO activity VALUES(?,?)",
               key,
               new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                       .format(Calendar.getInstance().getTime())
@@ -47,7 +45,8 @@ public class License {
       return true;
       
     } catch (SQLException e) {
-      e.printStackTrace();
+      //e.printStackTrace();
+      Log.exception(e);
       return false;
     }
   }

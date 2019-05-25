@@ -30,6 +30,7 @@ public class UpdateServer implements HTTPServer.ContextHandler {
           Log.success("File " + params.get("file") + " served");
         } catch (IOException e) {
           Log.error("Something went wrong with the file");
+          Log.exception(e);
           //e.printStackTrace();
         }
       } else {
@@ -45,7 +46,7 @@ public class UpdateServer implements HTTPServer.ContextHandler {
   
   /**
    * Modified net.freeutils.httpserver.HTTPServer.Response#send(int, java.lang.String)
-   * makes it possible to serve FileHandler instead of an HTML Page
+   * makes it possible to serve File instead of an HTML Page
    *
    * @param status http status code
    * @param contentType MIME Content type

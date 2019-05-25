@@ -69,15 +69,3 @@ class Cli {
     }
   }
 }
-
-/*
-BasicFileAttributes attr = FileHandler.readAttributes(new Path, BasicFileAttributes.class);
-attr.creationTime());
-attr.lastAccessTime());
-attr.lastModifiedTime());
-
-attr.isDirectory());
-attr.isOther());
-attr.isRegularFile());
-attr.isSymbolicLink());
-*/
