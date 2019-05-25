@@ -16,7 +16,7 @@ public class Main {
   private static License license = new License();
   public static final String UPDATES_PATH = "updateFiles/";
   
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     if (License.loadKeys()) {
     } else {
       Log.critical("Unable to load license Keys");
@@ -26,17 +26,9 @@ public class Main {
     HTTPServer server = new HTTPServer(4200);
     HTTPServer.VirtualHost host = server.getVirtualHost(null);
     host.addContext("/update", new getUpdater());
-    
-    try {
-      server.start();
-      
-    } catch (IOException e) {
-      Log.loading(-1);
-      Log.error("Server start failed");
-      System.exit(-1);
-      //e.printStackTrace();
-    }
-    
+    host.addContext("/v2/update", new serveUpdate());
+    server.start();
+  
     Scanner scanner = new Scanner(System.in);
     Log.success("Server started");
     while (true) try {
