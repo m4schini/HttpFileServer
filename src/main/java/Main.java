@@ -1,31 +1,30 @@
 import com.github.m4schini.FancyLog.Log;
+
 import net.freeutils.httpserver.HTTPServer;
+
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
   
-  static List keys = new ArrayList();
   private static License license = new License();
+  public static final String UPDATES_PATH = "updateFiles/";
   
   public static void main(String[] args) {
     if (License.loadKeys()) {
-      Log.loading(3);
     } else {
-      Log.loading(-1);
       Log.critical("Unable to load license Keys");
       System.exit(-1);
     }
   
-    Log.loading(6);
-    HTTPServer server = new HTTPServer(1337);
+    HTTPServer server = new HTTPServer(4200);
     HTTPServer.VirtualHost host = server.getVirtualHost(null);
-    
     host.addContext("/update", new getUpdater());
     
     try {
@@ -39,16 +38,11 @@ public class Main {
     }
     
     Scanner scanner = new Scanner(System.in);
-    Log.loading(10);
     Log.success("Server started");
-    while (true) {
-      String consoleInput = scanner.nextLine();
-      if (consoleInput.equals("exit")) {
-        Log.divide();
-        Log.status("Until next time");
-        license.close();
-        System.exit(0);
-      }
+    while (true) try {
+      Cli.handler(scanner.nextLine());
+    } catch (Exception e) {
+      Log.exception(e);
     }
   }
   
@@ -63,7 +57,7 @@ public class Main {
       if (license.verify(params.get("key"))) {
         Log.status("used licensekey: " + params.get("key"));
   
-        File file = new File("updateFiles/" + params.get("file"));
+        File file = new File(UPDATES_PATH + params.get("file"));
         if (file.exists()) {
           try {
             response.getHeaders().add("Content-Disposition", "filename=" + params.get("file"));
@@ -86,7 +80,7 @@ public class Main {
     
     /**
      * Modified net.freeutils.httpserver.HTTPServer.Response#send(int, java.lang.String)
-     * makes it possible to serve Files instead of an HTML Page
+     * makes it possible to serve FileHandler instead of an HTML Page
      *
      * @param status http status code
      * @param contentType MIME Content type
