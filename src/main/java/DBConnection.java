@@ -14,10 +14,10 @@ import java.util.Properties;
  * modified by Malte Schink
  */
 public class DBConnection implements Closeable {
-	private static String HOSTNAME = null;		//Specifies the hostname/ip address of the database.
-	private static String DATABASE = null;		//Specifies the name of the database to connect to.
-	private static String USERNAME = null;		//Specifies the username to log in on the database with.
-	private static String PASSWORD = null;		//Specifies the password to log in on the database with.
+	private static String HOSTNAME = null;  //Specifies the hostname/ip address of the database.
+	private static String DATABASE = null;  //Specifies the name of the database to connect to.
+	private static String USERNAME = null;  //Specifies the username to log in on the database with.
+	private static String PASSWORD = null;  //Specifies the password to log in on the database with.
 
 	/**
 	 * Specifies the port to connect to the database on.

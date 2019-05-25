@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * For now this has some quick and dirty methods. Planned is a license key verification connected to a database.
  */
+@Deprecated
 public class License {
   private static List keys = new ArrayList();
   private static DBConnection dbconnection = null;
