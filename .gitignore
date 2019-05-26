@@ -12,7 +12,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package FileHandler #
 *.jar
 *.war
 *.nar
@@ -103,3 +103,5 @@ src/test/
 updateDownloadServer.iml
 /src/main/java/Keys.java
 src/main/java/Test.java
+/server.conf
+/updateFiles/

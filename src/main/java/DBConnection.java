@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 /**
  * @author Collin Alpert
@@ -13,11 +14,10 @@ import java.sql.Statement;
  * modified by Malte Schink
  */
 public class DBConnection implements Closeable {
-
-	private static String HOSTNAME = Keys.DB.HOSTNAME;		//Specifies the hostname/ip address of the database.
-	private static String DATABASE = Keys.DB.DATABASE;		//Specifies the name of the database to connect to.
-	private static String USERNAME = Keys.DB.USERNAME;		//Specifies the username to log in on the database with.
-	private static String PASSWORD = Keys.DB.PASSWORD;		//Specifies the password to log in on the database with.
+	private static String HOSTNAME = null;  //Specifies the hostname/ip address of the database.
+	private static String DATABASE = null;  //Specifies the name of the database to connect to.
+	private static String USERNAME = null;  //Specifies the username to log in on the database with.
+	private static String PASSWORD = null;  //Specifies the password to log in on the database with.
 
 	/**
 	 * Specifies the port to connect to the database on.
@@ -35,15 +35,15 @@ public class DBConnection implements Closeable {
 
 	public DBConnection() {
 		try {
-			//var connectionString = String.format("jdbc:mysql://%s:%d/%s?serverTimezone=UTC", HOST, PORT, DATABASE);
-			//Class.forName("com.mysql.cj.jdbc.Driver");
-			//System.setProperty("user", USERNAME);
-			//System.setProperty("password", PASSWORD);
-			//connection = DriverManager.getConnection(connectionString, System.getProperties());
+			Properties config = Config.load(Config.PATH_CONFIG);
+			HOSTNAME = config.getProperty("hostname");
+			DATABASE = config.getProperty("database");
+			USERNAME = config.getProperty("username");
+			PASSWORD = config.getProperty("password");
 			
 			DriverManager.setLoginTimeout(5);
 			connection = DriverManager.getConnection(
-							"jdbc:mariadb://" + HOSTNAME + ":" + PORT + "/" + DATABASE + "?autoReconnect=true",
+							"jdbc:mariadb://" + HOSTNAME + ":" + PORT + "/" + DATABASE + "?autoReconnect=true&serverTimezone=UTC",
 							USERNAME,
 							PASSWORD);
 			
