@@ -19,22 +19,19 @@ public class License {
   boolean verify(String key) {
     try {
       ResultSet resultSet = dbconnection.execute("SELECT * FROM licenseKeys WHERE licenseKey=?", key);
-      resultSet.next();
-      
-      if (new Date().before(resultSet.getDate("validUntil"))) {
+      if (resultSet.next() && new Date().before(resultSet.getDate("validUntil"))) {
         return true;
       }
     } catch (SQLException e) {
-      //e.printStackTrace();
       Log.exception(e);
       return false;
     }
     return false;
   }
   
-  boolean activity(String key) {
+  boolean logActivity(String key) {
     try {
-      dbconnection.update("INSERT INTO activity VALUES(?,?)",
+      dbconnection.update("INSERT INTO logActivity VALUES(?,?)",
               key,
               new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                       .format(Calendar.getInstance().getTime())

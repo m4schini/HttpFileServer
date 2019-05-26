@@ -16,11 +16,11 @@ public class UpdateServer implements HTTPServer.ContextHandler {
   @Override
   public int serve(HTTPServer.Request request, HTTPServer.Response response) throws IOException {
     Log.divide();
-    Log.status("New Request.");
+    Log.status("New Request");
     
     Map<String, String> params = request.getParams();
     if (license.verify(params.get("key"))) {
-    
+      Log.status("Valid key");
       DataFile dataFile = getFile(Config.PATH_UPDATES + params.get("file"));
       if (dataFile.getFile().exists()) {
         try {
@@ -30,6 +30,7 @@ public class UpdateServer implements HTTPServer.ContextHandler {
                   dataFile.getFile(),
                   response);
           
+          Log.success(dataFile.getFile().getName() + " served");
         } catch (IOException e) {
           Log.error("Something went wrong with the file");
           Log.exception(e);
@@ -93,14 +94,6 @@ public class UpdateServer implements HTTPServer.ContextHandler {
 class DataFile {
   private static String mime = null;
   private static File file = null;
-  private static Boolean exists = false;
-  
-  DataFile() {}
-  
-  DataFile(String newMime, File newFile) {
-    mime = newMime;
-    file = newFile;
-  }
   
   String getMime() {
     return mime;

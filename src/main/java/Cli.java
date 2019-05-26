@@ -31,14 +31,7 @@ class Cli {
           break;
         }
         break;
-      case "serve":
-        serve(command[1]);
-      break;
     }
-  }
-  
-  private static void serve(String path) {
-  
   }
   
   /**

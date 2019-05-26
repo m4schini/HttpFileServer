@@ -21,4 +21,12 @@ class Config {
     properties.store(outputStream, "This is a config file for updateServer");
     outputStream.close();
   }
+  
+  static void loadMIMEs() {
+    try {
+      mimetypes = load("filetypes");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
