@@ -11,6 +11,7 @@ class Cli {
     switch (command[0]) {
       case "exit":
         Log.status("bye.");
+        UpdateServer.closeConnection();
         System.exit(0);
       break;
       case "ls":
