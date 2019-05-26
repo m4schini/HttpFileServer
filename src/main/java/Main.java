@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class Main {
   
   public static void main(String[] args) throws IOException {
+    Config.mimetypes = Config.load("filetypes");
+    
     HTTPServer server = new HTTPServer(4200);
     HTTPServer.VirtualHost host = server.getVirtualHost(null);
     host.addContext("/update", new UpdateServer());

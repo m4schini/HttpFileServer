@@ -3,16 +3,13 @@ import com.github.m4schini.FancyLog.Log;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * For now this has some quick and dirty methods. Planned is a license key verification connected to a database.
  */
 public class License {
-  private static List keys = new ArrayList();
   private static DBConnection dbconnection = null;
   
   public License() {
