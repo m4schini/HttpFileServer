@@ -1,5 +1,3 @@
-import com.github.m4schini.FancyLog.Log;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -7,7 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * For now this has some quick and dirty methods. Planned is a license key verification connected to a database.
+ * For now this has some quick and dirty methods. Planned is a license key verification connected
+ * to a database.
  */
 public class License {
   private static DBConnection dbconnection = null;
@@ -23,7 +22,7 @@ public class License {
         return true;
       }
     } catch (SQLException e) {
-      Log.exception(e);
+      e.printStackTrace();
       return false;
     }
     return false;
@@ -39,8 +38,7 @@ public class License {
       return true;
       
     } catch (SQLException e) {
-      //e.printStackTrace();
-      Log.exception(e);
+      e.printStackTrace();
       return false;
     }
   }
