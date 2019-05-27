@@ -41,10 +41,10 @@ class Cli {
   private static void ls(String path) throws IOException {
     Log.status("All available files in " + path + ":");
     File[] files = new File(path).listFiles();
-  
+    final String PATTERN = "%-40s%-15s%-30s%s%n";
     
     
-    System.out.printf("%-40s%-15s%-30s%s%n", "Name", "Size", "Created at", "Last accessed at");
+    System.out.printf(PATTERN, "Name", "Size", "Created at", "Last accessed at");
     assert files != null;
     for (File file : files) {
       BasicFileAttributes f_attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
@@ -55,7 +55,7 @@ class Cli {
         f_Name = file.getName() + "/";
       }
     
-      System.out.printf("%-40s%-15s%-30s%s%n",
+      System.out.printf(PATTERN,
               f_Name,
               (double) f_attrs.size() / 1000 + "kB",
               f_attrs.creationTime().toString().replace("T", " "),
