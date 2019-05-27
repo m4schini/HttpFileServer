@@ -5,9 +5,17 @@ import java.util.Properties;
 
 class Config {
   static final String PATH_CONFIG = "server.conf";
+  private static final String PATH_MIMES = "filetype.properties";
   static final String PATH_UPDATES = "updateFiles/";
-  static Properties mimetypes;
+  private static Properties mimetypes;
   
+  /**
+   * Load {@link Properties} from specified file.
+   *
+   * @param path to a properties file
+   * @return Properties of specified file
+   * @throws IOException, FileNotFoundException thrown by InputStream and Properties
+   */
   static Properties load(String path) throws IOException {
     Properties propertiesFile = new Properties();
     FileInputStream inputStream = new FileInputStream(path);
@@ -16,17 +24,42 @@ class Config {
     return propertiesFile;
   }
   
+  /**
+   * Saves specified {@link Properties} to specified file
+   *
+   * @param path to destination
+   * @param properties to save
+   * @throws IOException IOException, FileNotFoundException thrown by OutputStream and Properties
+   */
   static void save(String path, Properties properties) throws IOException {
     FileOutputStream outputStream = new FileOutputStream(path);
     properties.store(outputStream, "This is a config file for updateServer");
     outputStream.close();
   }
   
+  @Deprecated
   static void loadMIMEs() {
     try {
-      mimetypes = load("filetypes");
+      mimetypes = load(PATH_MIMES);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+  
+  /**
+   * Before returning Config.mimetypes checks if empty and {@code if (true)} loads mimes from file.
+   *
+   * @return Properties mimetypes that contains all supported filetypes with MIMEs
+   */
+  static Properties getMIMEs() {
+    if (mimetypes != null) {
+      try {
+        mimetypes = load(PATH_MIMES);
+      } catch (IOException e) {
+        mimetypes.setProperty("zip", "application/zip");
+        return mimetypes;
+      }
+    }
+    return mimetypes;
   }
 }
