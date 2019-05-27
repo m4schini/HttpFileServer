@@ -48,17 +48,20 @@ public class UpdateServer implements HTTPServer.ContextHandler {
   }
   
   /**
+   * Prepares File to serve. Checks if File exists and if it is a supported filetype.
+   *
    * @param path to File
-   * @return {@link Map} containing mimetype, file and boolean <== File.exists()
+   * @return {@link DataFile} containing Mime and File
    */
   private static DataFile getFile(String path) {
-    DataFile data = new DataFile();
-    
+    DataFile data = null;
+  
     File file = new File(path);
     if (file.exists()) {
       String filetype = file.getName().split("\\.")[1];
-      if (Config.mimetypes.containsKey(filetype)) {
-        data.setMime((String) Config.mimetypes.get(filetype));
+      if (Config.getMIMEs().containsKey(filetype)) {
+        data = new DataFile();
+        data.setMime((String) Config.getMIMEs().get(filetype));
         data.setFile(file);
       }
     }
@@ -75,7 +78,8 @@ public class UpdateServer implements HTTPServer.ContextHandler {
    * @param response HTTPServer.Response, needed to answer to request
    * @throws IOException HTTPServer.Response, FileInputStream
    */
-  private static void sendFile(int status, String contentType, File file, HTTPServer.Response response) throws IOException {
+  private static void sendFile(int status, String contentType, File file, HTTPServer.Response response)
+          throws IOException {
     
     response.sendHeaders(status, file.length(), -1,
             "W/\"" + Integer.toHexString(file.hashCode()) + "\"",
