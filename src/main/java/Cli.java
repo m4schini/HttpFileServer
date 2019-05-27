@@ -4,8 +4,41 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Properties;
+import java.util.Scanner;
 
 class Cli {
+  static void init() {
+    Scanner scanner = new Scanner(System.in);
+    Log.warning("Config not found.");
+    Log.status("Please enter database creds:");
+    
+    System.out.println("Hostname: ");
+    String hostname = scanner.nextLine();
+    
+    System.out.println("Database: ");
+    String database = scanner.nextLine();
+  
+    System.out.println("Username: ");
+    String username = scanner.nextLine();
+    
+    System.out.println("Password: ");
+    String password = scanner.nextLine();
+  
+    //TODO Make this a method in Config.java
+    Properties creds = new Properties();
+    creds.setProperty("hostname", hostname);
+    creds.setProperty("database", database);
+    creds.setProperty("username", username);
+    creds.setProperty("password", password);
+    try {
+      Config.save(Config.PATH_CONFIG, creds);
+    } catch (IOException e) {
+      Log.exception(e);
+    }
+    Log.success("Creds saved.");
+  }
+  
   static void handler(String consoleInput) throws Exception {
     String[] command = consoleInput.split(" ");
     switch (command[0]) {

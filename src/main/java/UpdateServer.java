@@ -22,6 +22,7 @@ public class UpdateServer implements HTTPServer.ContextHandler {
     if (license.verify(params.get("key"))) {
       Log.status("Valid key");
       DataFile dataFile = getFile(Config.PATH_UPDATES + params.get("file"));
+      Log.status("Assigned MIME: " + dataFile.getMime());
       if (dataFile.getFile().exists()) {
         try {
           response.getHeaders().add("Content-Disposition", "filename=" + params.get("file"));

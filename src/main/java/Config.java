@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 class Config {
-  static final String PATH_CONFIG = "server.conf";
-  private static final String PATH_MIMES = "filetype.properties";
+  static final String PATH_CONFIG = "config.properties";
+  private static final String PATH_MIMES = "filetypes.properties";
   static final String PATH_UPDATES = "updateFiles/";
   private static Properties mimetypes;
   
@@ -52,7 +52,7 @@ class Config {
    * @return Properties mimetypes that contains all supported filetypes with MIMEs
    */
   static Properties getMIMEs() {
-    if (mimetypes != null) {
+    if (mimetypes == null) {
       try {
         mimetypes = load(PATH_MIMES);
       } catch (IOException e) {
